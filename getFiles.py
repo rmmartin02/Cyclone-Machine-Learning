@@ -3,6 +3,12 @@ import requests
 import os
 from bs4 import BeautifulSoup
 import datetime
+import threading
+
+def downloadTxt(url,file_name):
+    print('Downloading: {}'.format(file_name))
+    urllib.request.urlretrieve(url, file_name)
+    print('Finished Downloading: {}'.format(file_name))
 
 def saveTextFiles(year,reconArchive,dataType,plane=None,):
     print(reconArchive)
@@ -26,8 +32,7 @@ def saveTextFiles(year,reconArchive,dataType,plane=None,):
         file_name = directory + t
         if not os.path.isfile(file_name):
             url = reconArchive + t
-            print('Downloading: {}'.format(t))
-            urllib.request.urlretrieve(url, file_name)
+            threading.Thread(target=downloadTxt, args=(url, file_name)).start()
         else:
             print('Already have: {}'.format(t))
 

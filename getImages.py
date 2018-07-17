@@ -1,8 +1,13 @@
+import threading
 import urllib.request
 import requests
 import os
 from bs4 import BeautifulSoup
-import datetime
+
+def downloadImage(url,file_name):
+    print('Downloading: {}'.format(file_name))
+    urllib.request.urlretrieve(url, file_name)
+    print('Finished Downloading: {}'.format(file_name))
 
 baseURL = 'http://rammb.cira.colostate.edu/'
 stormsURL = baseURL + 'products/tc_realtime/products/storms/'
@@ -39,8 +44,7 @@ for storm in stormDIRs:
             file_name = directory + image
             if not os.path.isfile(file_name):
                 url = '{}/{}'.format(productURL,image)
-                print('Downloading: {}'.format(image))
-                urllib.request.urlretrieve(url, file_name)
+                threading.Thread(target=downloadImage,args=(url, file_name)).start()
             else:
                 print('Already have: {}'.format(image))
 
