@@ -73,8 +73,7 @@ while year<=datetime.date.today().year:
                 saveTextFiles(year, reconArchive, dataType)
     else:
         for dataType in dataTypes2012:
-            '{}{}/'.format(reconArchive,dataType)
-            saveTextFiles(year, reconArchive, dataType)
+            saveTextFiles(year, '{}{}/'.format(reconArchive,dataType), dataType)
 
     year += 1
 
