@@ -31,11 +31,11 @@ def getImages(stormURL,storm,product):
 
     images = []
     for a in allAs:
-        if '.GIF' in str(a):
+        if '.TXT' in str(a):
             images.append(str(a).split('"')[1].split('/')[7])
 
     for image in images:
-        directory = './images/{}/{}/'.format(storm,product)
+        directory = './data/{}/{}/'.format(storm,product)
         file_name = directory + image
         if not os.path.exists(directory):
             os.makedirs(directory)
@@ -84,7 +84,7 @@ for a in allAs:
 for storm in stormDIRs:
     stormURL = '{}{}/'.format(stormsURL,storm)
     #get 4KMIRIMG
-    products = ['4KMIRIMG']
+    products = ['STRMSTAT']
     for product in products:
         q.put( (getImages,stormURL, storm, product) )
 
