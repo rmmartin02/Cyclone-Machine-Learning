@@ -14,9 +14,10 @@ def verify(storm):
 				try:
 					im = Image.open(directory+'/'+image)
 					im = im.resize((32,32),Image.NEAREST)
-					print('OK: {}'.format(image))
+					#print('OK: {}'.format(image))
 				except OSError:
 					print('Error: {}'.format(image))
+					os.remove(directory+'/'+image)
 					url = 'http://rammb.cira.colostate.edu/products/tc_realtime/products/storms/{}/4KMIRIMG/{}'.format(storm,image)
 					urllib.request.urlretrieve(url, directory+'/'+image)
  
