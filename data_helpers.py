@@ -20,18 +20,8 @@ def load_batch(filename):
 
 def load_data():
   '''load all CIFAR-10 data and merge training batches'''
-
-  xs = []
-  ys = []
-  for i in range(1, 6):
-    filename = './hurr-batches/data_batch_' + str(i)
-    X, Y = load_batch(filename)
-    xs.append(X)
-    ys.append(Y)
-
-  x_train = np.concatenate(xs)
-  y_train = np.concatenate(ys)
-  del xs, ys
+  filename = './hurr-batches/data_batch'
+  x_train , y_train = np.concatenate(ys)
 
   x_test, y_test = load_batch('./hurr-batches/test_batch')
 

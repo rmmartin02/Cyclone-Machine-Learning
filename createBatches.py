@@ -4,11 +4,11 @@ import os
 import pickle
 from random import randrange
 
-size = 32
+size = 64
 
-labels = [[],[],[],[],[],[]]
-imageArray = [[],[],[],[],[],[]]
-filenames = [[],[],[],[],[],[]]
+labels = [[],[]]
+imageArray = [[],[]]
+filenames = [[],[]]
 #num = 0
 for storm in os.listdir('./images/'):
     directory = './data/{}/STRMSTAT/'.format(storm)
@@ -18,10 +18,13 @@ for storm in os.listdir('./images/'):
         if os.path.exists(directory):
             for image in os.listdir(directory):
                 for stat in stats:
-                    if image[-16:-5] == stat[-16:-5]:
+                    imageDate = int(image[-16:-5])
+                    statDate = int(stat[-16:-5])
+                    if statDate<imageDate+15 and statDate>imageDate-15:
                         try:
+                            print('processing image: {}'.format(image))
                             im = Image.open(directory+'/'+image)
-                            im = im.resize((size,size),Image.NEAREST)
+                            im = im.resize((size,size))
                             im = (np.array(im))
 
                             index = randrange(len(imageArray))
@@ -37,16 +40,12 @@ for storm in os.listdir('./images/'):
 
                         except OSError:
                             pass
-
-sizes = []
-for i in range(len(imageArray)):
-    sizes.append(len(imageArray[i]))
-    if i!=len(imageArray)-1:
-        d = {'filenames':filenames[i],'batch_label':'training batch {} of {}'.format(i+1,len(imageArray)),'data':np.array(imageArray[i]),'labels':labels[i]}
-        pickle.dump( d, open( "./hurr-batches/data_batch_{}".format(i+1), "wb" ) )
-    else:
-        d = {'filenames':filenames[i],'batch_label':'testing batch {} of {}'.format(1,1),'data':np.array(imageArray[i]),'labels':labels[i]}
-        pickle.dump( d, open( "./hurr-batches/test_batch", "wb" ) )
+i=0
+d = {'filenames':filenames[i],'batch_label':'training batch {} of {}'.format(i+1,len(imageArray)),'data':np.array(imageArray[i]),'labels':labels[i]}
+pickle.dump( d, open( "./hurr-batches/data_batch", "wb" ) )
+i=1
+d = {'filenames':filenames[i],'batch_label':'testing batch {} of {}'.format(1,1),'data':np.array(imageArray[i]),'labels':labels[i]}
+pickle.dump( d, open( "./hurr-batches/test_batch", "wb" ) )
 
 print(sizes)
 d = {'label_names':['storm','hurricane'],'num_cases_per_batch':sizes,'num_vis':size*size}
