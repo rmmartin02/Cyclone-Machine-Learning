@@ -11,10 +11,12 @@ import data_helpers
 
 beginTime = time.time()
 
+size = 64
+
 # Parameter definitions
-batch_size = 100
+batch_size = 1000
 learning_rate = 0.005
-max_steps = 1000
+max_steps = 10000
 
 # Uncommenting this line removes randomness
 # You'll get exactly the same result on each run
@@ -23,18 +25,20 @@ max_steps = 1000
 # Prepare data
 data_sets = data_helpers.load_data()
 
+print(len(data_sets['images_train']),len(data_sets['images_test']))
+
 # -----------------------------------------------------------------------------
 # Prepare the TensorFlow graph
 # (We're only defining the graph here, no actual calculations taking place)
 # -----------------------------------------------------------------------------
 
 # Define input placeholders
-images_placeholder = tf.placeholder(tf.float32, shape=[None, 1024])
+images_placeholder = tf.placeholder(tf.float32, shape=[None, size*size])
 labels_placeholder = tf.placeholder(tf.int64, shape=[None])
 
 # Define variables (these are the values we want to optimize)
-weights = tf.Variable(tf.zeros([1024, 2]))
-biases = tf.Variable(tf.zeros([2]))
+weights = tf.Variable(tf.zeros([size*size, len(data_sets['classes'])]))
+biases = tf.Variable(tf.zeros([len(data_sets['classes'])]))
 
 # Define the classifier's result
 logits = tf.matmul(images_placeholder, weights) + biases

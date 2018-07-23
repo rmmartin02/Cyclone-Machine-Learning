@@ -21,16 +21,19 @@ def load_batch(filename):
 def load_data():
   '''load all CIFAR-10 data and merge training batches'''
   filename = './hurr-batches/data_batch'
-  x_train , y_train = np.concatenate(ys)
 
-  x_test, y_test = load_batch('./hurr-batches/test_batch')
+  size = 64
 
-  classes = ['storm,hurricane']
+  x_train , y_train = load_batch('./hurr-batches/CATs_data_batch{}'.format(size))
+
+  x_test, y_test = load_batch('./hurr-batches/CATs_test_batch{}'.format(size))
+
+  classes = ['storm,cat1,cat2,cat3,cat4,cat5,']
 
   # Normalize Data
-  mean_image = np.mean(x_train, axis=0)
-  x_train -= mean_image
-  x_test -= mean_image
+  #mean_image = np.mean(x_train, axis=0)
+ # x_train -= mean_image
+  #x_test -= mean_image
 
   data_dict = {
     'images_train': x_train,
