@@ -1,17 +1,17 @@
 import os
 import urllib.request
 from PIL import Image
-from threading import Thread
-from queue import Queue
+import multiprocessing
 
 def verify(storm):
     directory = './images/{}/4KMIRIMG/'.format(storm)
     if os.path.exists(directory):
         for image in os.listdir(directory):
             with Image.open(directory+'/'+image) as im:
-                if im.height != 480 and im.width != 640:
-                    print(image,im.height,im.width)
-                    os.remove(directory+'/'+image)
+                print(im.height)
+                #if im.height != 480 and im.width != 640:
+                    #print(image,im.height,im.width)
+                    #os.remove(directory+'/'+image)
                 '''
                 try:
                     with Image.open(directory+'/'+image) as im:
@@ -23,26 +23,13 @@ def verify(storm):
                     url = 'http://rammb.cira.colostate.edu/products/tc_realtime/products/storms/{}/4KMIRIMG/{}'.format(storm,image)
                     urllib.request.urlretrieve(url, directory+'/'+image)
                 '''
-def do_work(q):
-    while True:
-        items = q.get()
-        func = items[0]
-        args = items[1:]
-        func(*args)
-        q.task_done()
 
 def main():
-    q = Queue(maxsize=0)
-    num_threads = 8
-    for i in range(num_threads):
-        worker = Thread(target=do_work,args=(q,))
-        worker.setDaemon(True)
-        worker.start()   
 
-    for storm in os.listdir('./images/'):
-        q.put( (verify,storm))
-        
-    q.join()
+    pool = multiprocessing.Pool(processes=4)  # Num of CPUs
+    pool.map(verify, os.listdir('./images/'))
+    pool.close()
+    pool.terminate()
 
 if __name__ == '__main__':
     try:
