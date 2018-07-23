@@ -10,7 +10,8 @@ def verify(storm):
         for image in os.listdir(directory):
             with Image.open(directory+'/'+image) as im:
                 if im.height != 480 and im.width != 640:
-                    print('wtf')
+                    print(image,im.height,im.width)
+                    os.remove(directory+'/'+image)
                 '''
                 try:
                     with Image.open(directory+'/'+image) as im:
@@ -18,7 +19,7 @@ def verify(storm):
                     #print('OK: {}'.format(image))
                 except OSError as err:
                     print('Error: {}\n{}'.format(image,err))
-                    os.remove(directory+'/'+image)
+                    
                     url = 'http://rammb.cira.colostate.edu/products/tc_realtime/products/storms/{}/4KMIRIMG/{}'.format(storm,image)
                     urllib.request.urlretrieve(url, directory+'/'+image)
                 '''
