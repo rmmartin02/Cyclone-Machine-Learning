@@ -3,7 +3,7 @@ import urllib.request
 from PIL import Image
 import multiprocessing
 
-def verify(storm):
+def verify(season):
     directory = './images/{}/4KMIRIMG/'.format(storm)
     if os.path.exists(directory):
         for image in os.listdir(directory):
@@ -27,7 +27,7 @@ def verify(storm):
 def main():
 
     pool = multiprocessing.Pool(processes=4)  # Num of CPUs
-    pool.map(verify, os.listdir('./images/'))
+    pool.map(verify, os.listdir(os.getcwd()+'/tcdat/'))
     pool.close()
     pool.terminate()
 

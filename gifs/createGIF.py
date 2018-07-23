@@ -11,15 +11,18 @@ filenames = []
 page = requests.get(imagesURL)
 soup = BeautifulSoup(page.text, 'html.parser')
 allAs = soup.find_all('a', href=True)
+count = 0
 for idx,a in enumerate(allAs):
-    print('{}/{} ({}%)'.format(idx,len( allAs ),(idx/len( allAs))*100))
+    print('{}/{} ({}%)'.format(idx+1,len( allAs ),((idx+1)/len( allAs))*100))
     if a.text:
         imagehref = a['href']
         if '.jpg' in imagehref and 'LATEST' not in imagehref:
-            urllib.request.urlretrieve(imagesURL+imagehref, './gifs/temp/{}'.format(imagehref))
+            if urllib.request.urlopen(imagesURL+imagehref).length>100000:
+                urllib.request.urlretrieve(imagesURL+imagehref, './gifs/temp/{0:05d}.jpg'.format(count))
+                count += 1
             #Image.open('./gifs/temp/{}'.format(imagehref)).save('./gifs/temp/{}'.format(imagehref).replace('jpg','png'))
             #os.remove('./gifs/temp/{}'.format(imagehref))
-            filenames.append('./gifs/temp/{}'.format(imagehref))
+            #print('Content length: {}'.format(urllib.request.urlopen(imagesURL+imagehref).length))
 
 images = []
 for filename in filenames:
