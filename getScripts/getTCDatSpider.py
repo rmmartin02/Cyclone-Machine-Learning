@@ -12,11 +12,21 @@ for season in seasons:
 visited = []
 towrite = []
 
+with open('./getScripts/TCDAT.csv','w') as file:
+    file.write('')
+
 def checkUrl(url):
     for a in allowed:
         if a in url:
             return True
     return False
+
+def RepresentsInt(s):
+    try: 
+        int(s)
+        return True
+    except ValueError:
+        return False
 
 class TCDAT2Spider(Spider):
     name = 'Explore TCDAT2'
@@ -45,18 +55,20 @@ class TCDAT2Spider(Spider):
                     if len(a)>4:
                         size = a[-1][:-1]
                         path = response.url.split('/')[4:-1]
-                        image = a[4].split('"')[1].split('.')
-                        if len(path)<6:
-                            while len(path)<6:
-                                path.append('')
-                        form = image[-1]
-                        image = image[:-1]
-                        if len(image)<9:
-                            while len(image)<9:
-                                image.append('')
-                            image.append(form)
-                        parsed = '{},{},{}\n'.format(','.join(path+image),size,response.url)
-                        towrite.append(parsed)
+                        imageUrl = a[4].split('"')[1]
+                        image = imageUrl.split('.')
+                        if RepresentsInt(image[0]):
+                            if len(path)<6:
+                                while len(path)<6:
+                                    path.append('')
+                            form = image[-1]
+                            image = image[:-1]
+                            if len(image)<9:
+                                while len(image)<9:
+                                    image.append('')
+                                image.append(form)
+                            parsed = '{},{},{}{}\n'.format(','.join(path+image),size,response.url,imageUrl)
+                            towrite.append(parsed)
             with open('./getScripts/TCDAT.csv','a') as file:
                 file.writelines(towrite)
             del towrite[:]
